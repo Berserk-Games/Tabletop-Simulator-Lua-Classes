@@ -93,16 +93,16 @@ end
 function Color:toHex(includeAlpha)
     if includeAlpha then
         return ('%02x%02x%02x%02x'):format(
-            self.r,
-            self.g,
-            self.b,
-            self.a
+            self.r*255,
+            self.g*255,
+            self.b*255,
+            self.a*255
         )
     else
         return ('%02x%02x%02x'):format(
-            self.r,
-            self.g,
-            self.b
+            self.r*255,
+            self.g*255,
+            self.b*255
         )
     end
 end
