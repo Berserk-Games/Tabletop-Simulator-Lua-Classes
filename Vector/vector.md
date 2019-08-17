@@ -47,6 +47,8 @@ Methods not modifying self:
  vec:normalized()          --> return a new vector that is normalized (length 1) version of self
  vec:orthoNormalize()	       --> return three normalized vectors perpendicular to each other, first one being in the same dir as self
  vec:orthoNormalize(otherVec)  --> same as vec:orthoNormalize(), but second vector is guranteed to be on a self-otherVec plane
+ vec:heading(axisStr)          --> return signed angle of vector projection over given axis ('x', 'y' or 'z'), in degrees
+ vec:heading()                 --> return three angles, vec:heading('x'), vec:heading('y'), vec:heading('z')
  
 Operators:
  vecOne + vecTwo  --> return a new vector with added components of vecOne and vecTwo

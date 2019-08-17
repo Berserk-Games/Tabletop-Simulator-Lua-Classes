@@ -448,4 +448,22 @@ function Vector:orthoNormalize(binormalPlanar)
     return base, normal, binormal
 end
 
+function Vector:heading(axis)
+    if not axis then
+        return self:heading('x'), self:heading('y'), self:heading('z')
+    end
+    
+    local c1, c2
+    
+    if axis == 'x' then
+        c1, c2 = self.y, self.z
+    elseif axis == 'y' then
+        c1, c2 = self.x, self.z
+    elseif axis == 'z' then
+        c1, c2 = self.x, self.y
+    end
+    
+    return math.deg(math.atan2(c1, c2))
+end
+
 return Vector
