@@ -31,6 +31,7 @@ Methods modifying self and returning self:
  vec:moveTowards(otherVec, num)	  --> move self towards another vector, but only up to a provided distance limit
  vec:rotateTowards(otherVec, num) --> rotate self towards another vector, but only up to a provided angle limit
  vec:projectOnPlane(otherVec)     --> project self on a plane defined through a normal vector arg
+ vec:rotateOver(axisStr, angle)   --> rotate vector for some angle in degrees over given axis ('x', 'y' or 'z')
  
 Methods not modifying self:
  vec:dot(otherVec) 		   --> return a dot product of self with otherVec

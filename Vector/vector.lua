@@ -138,7 +138,7 @@ end
 
 function Vector:equals(other, margin)
     margin = margin or 1e-3
-    return self:sqrDistance(other) < margin
+    return self:sqrDistance(other) <= margin
 end
 
 Vector.__eq = Vector.equals
@@ -194,14 +194,12 @@ function Vector:moveTowards(target, maxDist)
 end
 
 function Vector:normalize()
-    local len = self:magnitude()
-    if len == 1 then
+    local sqrLen = self:sqrMagnitude()
+    if sqrLen == 1 or sqrLen == 0 then
         return self
-    elseif len == 0 then
-        return self:set(0, 0, 0)
     end
         
-    return self:scale(1/len)
+    return self:scale(1/math.sqrt(sqrLen))
 end
 
 function Vector:normalized()
@@ -373,6 +371,34 @@ do
         return mApply(reflectMatrix, self)
     end
     
+    local function basicRotationMatrix(axis, angle)
+        angle = math.rad(angle)
+        local sin, cos = math.sin(angle), math.cos(angle)
+        
+        if axis == 'x' then
+            return {
+                Vector( 1,   0,    0  ),
+                Vector( 0,  cos, -sin ),
+                Vector( 0,  sin,  cos )
+            }
+        elseif axis == 'y' then
+            return {
+                Vector( cos,  0,  sin ),
+                Vector(  0,   1,   0  ),
+                Vector(-sin,  0,  cos )
+            }
+        elseif axis == 'z' then
+            return {
+                Vector( cos, -sin,  0 ),
+                Vector( sin,  cos,  0 ),
+                Vector(  0,    0,   1 )
+            }
+        end
+    end    
+    
+    function Vector:rotateOver(axis, angle)
+        return mApply(basicRotationMatrix(axis, angle), self)
+    end
 end
 
 function Vector.max(v1, v2)

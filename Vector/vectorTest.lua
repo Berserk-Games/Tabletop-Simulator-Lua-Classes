@@ -122,3 +122,6 @@ do
     testEq(baseOne:angle(baseThree), 90)
     testEq(baseTwo:angle(baseThree), 90)
 end
+
+testVecEq(Vec(math.sqrt(2), 0, 0):rotateOver('y', -45), Vec(1, 0, 1))
+testVecEq(Vec(2, 2, 1):rotateOver('z', 60), Vec(-0.73205, 2.73205, 1))
