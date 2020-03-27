@@ -83,7 +83,13 @@ end
 function Color.fromHex(hexColor)
     local rStr, gStr, bStr = hexColor:match('#?(%x%x)(%x%x)(%x%x)')
     assert(rStr and gStr and bStr, tostring(hexColor) .. ' is not a valid color hex string')
-    return Color(tonumber(rStr, 16), tonumber(gStr, 16), tonumber(bStr, 16))
+
+    local r255 = tonumber(rStr, 16)
+    local g255 = tonumber(gStr, 16)
+    local b255 = tonumber(bStr, 16)
+    assert(r255 and g255 and b255, tostring(hexColor) .. ' is not a valid color hex string')
+
+    return Color(r255/255, g255/255, b255/255)
 end
 
 function Color:get()
@@ -156,7 +162,7 @@ end
 
 function Color:dump(prefix)
     local name = self:toString()
-    local str = (self.a > 0) and '%s%s{ r = %f, g = %f, b = %f, a = %f }' or '%s%s{ r = %f, g = %f, b = %f }'
+    local str = (self.a < 1) and '%s%s{ r = %f, g = %f, b = %f, a = %f }' or '%s%s{ r = %f, g = %f, b = %f }'
     return str:format(
         prefix and (prefix .. ': ') or '',
         name and (name .. ' ') or '',
