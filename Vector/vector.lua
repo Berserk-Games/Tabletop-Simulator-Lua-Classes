@@ -145,17 +145,17 @@ Vector.__eq = Vector.equals
 
 function Vector:string(prefix)
     prefix = prefix and (prefix .. ': ') or ''
-    return ('%s{ %f, %f, %f }'):format(
+    return (('%s{ %f, %f, %f }'):format(
         prefix,
         self.x,
         self.y,
         self.z
         -- cut trailing zeroes from numbers
-    ):gsub('%.0+([ ,])', '%1'):gsub('%.(%d-)0+([ ,])', '.%1%2')
+    ):gsub('%.0+([ ,])', '%1'):gsub('%.(%d-)0+([ ,])', '.%1%2'))
 end
 
 function Vector:__tostring()
-    return (self:string('Vector'))
+    return self:string('Vector')
 end
 
 function Vector:angle(other)

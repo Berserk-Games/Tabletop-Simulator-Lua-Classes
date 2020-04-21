@@ -79,6 +79,12 @@ testEq(Vec(1, 2, 3):equals(Vec(0.999, 2.001, 3)), true)
 testEq(Vec(1, 2, 3) == Vec(1.001, 1.999, 3), true)
 
 testEq(tostring(Vec(1, 222.22000, -3)), 'Vector: { 1, 222.22, -3 }')
+testEq(Vec(1, 222.22000, -3):string(), '{ 1, 222.22, -3 }')
+testEq(Vec(1, 222.22000, -3):string('Name'), 'Name: { 1, 222.22, -3 }')
+
+testEq(select('#', tostring(Vec(0, 0, 0))), 1)
+testEq(select('#', Vec(0, 0, 0):string()), 1)
+testEq(select('#', Vec(0, 0, 0):string('Name')), 1)
 
 testEq(Vec(1, 1, 0):angle(Vec(0, 1, 1)), 60)
 
