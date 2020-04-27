@@ -1,4 +1,4 @@
-local Vec = require 'vector'
+local Vec = require 'Vector.vector'
 
 local function eq(val1, val2, margin)
     assert(type(val1) == type(val2))    

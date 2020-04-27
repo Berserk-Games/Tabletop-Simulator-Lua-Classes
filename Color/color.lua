@@ -1,5 +1,6 @@
 local Color = {}
 Color.__isColor = true
+Color.__version = '1.0.1'
 
 local colorMt = {}
 
@@ -58,7 +59,7 @@ local playerColors = {
 colorMt.__index = function(_, colorName)
     colorName = colorName:lower()
     if playerColors[colorName] then
-        return playerColors[colorName]:copy(), normalizeName(colorName)
+        return playerColors[colorName]:copy()
     end
 end
 
@@ -81,15 +82,16 @@ function Color.fromString(strColor)
 end
 
 function Color.fromHex(hexColor)
-    local rStr, gStr, bStr = hexColor:match('#?(%x%x)(%x%x)(%x%x)')
-    assert(rStr and gStr and bStr, tostring(hexColor) .. ' is not a valid color hex string')
+    local rStr, gStr, bStr, aStr = hexColor:match('^#?(%x%x)(%x%x)(%x%x)(%x?%x?)$')
+    
+    assert(rStr and gStr and bStr and (aStr:len() == 0 or aStr:len() == 2), tostring(hexColor) .. ' is not a valid color hex string')
 
-    local r255 = tonumber(rStr, 16)
-    local g255 = tonumber(gStr, 16)
-    local b255 = tonumber(bStr, 16)
-    assert(r255 and g255 and b255, tostring(hexColor) .. ' is not a valid color hex string')
-
-    return Color(r255/255, g255/255, b255/255)
+    return Color(
+        tonumber(rStr, 16)/255, 
+        tonumber(gStr, 16)/255, 
+        tonumber(bStr, 16)/255,
+        (tonumber(aStr, 16) or 255)/255
+    )
 end
 
 function Color:get()
@@ -163,16 +165,16 @@ end
 function Color:dump(prefix)
     local name = self:toString()
     local str = (self.a < 1) and '%s%s{ r = %f, g = %f, b = %f, a = %f }' or '%s%s{ r = %f, g = %f, b = %f }'
-    return str:format(
+    return (str:format(
         prefix and (prefix .. ': ') or '',
         name and (name .. ' ') or '',
         self:get()
         -- cut trailing zeroes from numbers
-    ):gsub('%.0+([ ,])', '%1'):gsub('%.(%d-)0+([ ,])', '.%1%2')
+    ):gsub('%.0+([ ,])', '%1'):gsub('%.(%d-)0+([ ,])', '.%1%2'))
 end
 
 function Color:__tostring()
-    return (self:dump('Color'))
+    return self:dump('Color')
 end
 
 function Color:lerp(other, t)

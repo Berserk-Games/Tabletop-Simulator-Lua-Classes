@@ -1,4 +1,4 @@
-local Color = require 'color'
+local Color = require 'Color.color'
 
 for _, color in ipairs({
     'White',
@@ -48,6 +48,13 @@ local function testEq(val1, val2, margin)
     end
 end
 
+local function testError(f)
+    local pass = not pcall(f)
+    if not pass then
+        error('Busted test!', 2)
+    end
+end
+
 testColorEq(Color(0.1, 0.2, 0.3), Color.new(0.1, 0.2, 0.3))
 testColorEq(Color(0.1, 0.2, 0.3, 0.4), Color.new({r = 0.1, g = 0.2, b = 0.3, a = 0.4}))
 
@@ -68,7 +75,17 @@ testEq(tostring(Color(0.1, 0.2, 0.3)), 'Color: { r = 0.1, g = 0.2, b = 0.3 }')
 testEq(Color.Purple:toString(), 'Purple')
 testEq(tostring(Color.Purple), 'Color: Purple { r = 0.627, g = 0.125, b = 0.941 }')
 testEq(Color.Purple:toHex(), 'a020f0')
+
+testEq(Color.fromHex('0055aa'), Color(0, 1/3, 2/3, 1))
 testEq(Color.fromHex('0055aaff'), Color(0, 1/3, 2/3, 1))
+testEq(Color.fromHex('0055aa55'), Color(0, 1/3, 2/3, 1/3))
+
+testError(function() return Color.fromHex('0055a') end)
+testError(function() return Color.fromHex('0055xx') end)
+testError(function() return Color.fromHex('0055ax') end)
+testError(function() return Color.fromHex('0055aaf') end)
+testError(function() return Color.fromHex('0055aafx') end)
+testError(function() return Color.fromHex('0055aaxx') end)
 
 Color.Add('Turquoise', Color(0.1, 0.2, 0.3))
 testEq(Color.Turquoise, Color(0.1, 0.2, 0.3))

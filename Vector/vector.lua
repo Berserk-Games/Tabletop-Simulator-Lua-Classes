@@ -1,5 +1,6 @@
 local Vector = {}
 Vector.__isVector = true
+Vector.__version = '1.0.1'
 
 function Vector.new(...)
     local vec = setmetatable({
