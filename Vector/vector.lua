@@ -64,7 +64,7 @@ function Vector:add(other)
     return self
 end
 
-function Vector.__add(v1, v2)--
+function Vector.__add(v1, v2)
     return v1:copy():add(v2)
 end
 

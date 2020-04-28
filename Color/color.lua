@@ -61,6 +61,7 @@ colorMt.__index = function(_, colorName)
     if playerColors[colorName] then
         return playerColors[colorName]:copy()
     end
+    return nil
 end
 
 Color.list = {}
