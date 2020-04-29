@@ -147,6 +147,8 @@ local function test(Vec, verbose)
     testEq(Vec(math.sqrt(2), 0, math.sqrt(2)):heading('y'), 45)
     testEq(Vec(-math.sqrt(2), 0, -math.sqrt(2)):heading('y'), -135)
     
+    testVecEq(Vec(1, 2, 3), Vec(-1, -2, -3):inverse())
+    
     print('Pass')
 end
 

@@ -419,7 +419,7 @@ function Vector.min(v1, v2)
 end
 
 function Vector:inverse()
-    self:set(-1*self.x, -1*self.y, -1*self.z)
+    return self:set(-1*self.x, -1*self.y, -1*self.z)
 end
 
 function Vector:projectOnPlane(planeNormal)
