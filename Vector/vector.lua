@@ -128,9 +128,10 @@ function Vector.__mul(val1, val2)
 end
 
 function Vector:sqrDistance(other)
-    return math.pow(self.x - other.x, 2)
-        + math.pow(self.y - other.y, 2)
-        + math.pow(self.z - other.z, 2)
+    local dx = self.x - other.x
+    local dy = self.y - other.y
+    local dz = self.z - other.z
+    return dx*dx + dy*dy + dz*dz
 end
 
 function Vector:distance(other)
