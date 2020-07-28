@@ -111,9 +111,14 @@ local function test(Color, verbose)
     Color.Add('Turquoise', Color(0.1, 0.2, 0.3))
     testEq(Color.Turquoise, Color(0.1, 0.2, 0.3))
     testEq(Color.Nonexistent, nil)
+    testEq(Color[nil], nil)
 
     testEq(Color(0.1, 0.2, 0.3):lerp(Color(0.8, 0.8, 0.8), 0.5), Color(0.45, 0.5, 0.55))
-    
+
+    testEq(Color(0.1, 0.2, 0.3)[0], nil)
+    testEq(Color(0.1, 0.2, 0.3)[999], nil)
+    testEq(Color(0.1, 0.2, 0.3).foo, nil)
+
     print('Pass')
 end
 

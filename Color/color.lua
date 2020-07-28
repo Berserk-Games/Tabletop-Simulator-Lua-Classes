@@ -57,9 +57,11 @@ local playerColors = {
     ['black']  = Color.new(0.25, 0.25, 0.25),
 }
 colorMt.__index = function(_, colorName)
-    colorName = colorName:lower()
-    if playerColors[colorName] then
-        return playerColors[colorName]:copy()
+    if type(colorName) == 'string' then
+        colorName = colorName:lower()
+        if playerColors[colorName] then
+            return playerColors[colorName]:copy()
+        end
     end
     return nil
 end
