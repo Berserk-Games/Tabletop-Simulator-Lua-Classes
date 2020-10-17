@@ -149,6 +149,10 @@ local function test(Vec, verbose)
     
     testVecEq(Vec(1, 2, 3), Vec(-1, -2, -3):inverse())
     
+    testVecEq(Vec(1, 2, 3), Vec(1, 1/2, 1/3):reciprocal())
+    
+    testVecEq(Vec(2, 2, 1):rotateOver('z', 60):rotateOver('x', -45):rotateOver('y', 10), Vec(2, 2, 1):rotateOver(Vec(-45, 10, 60)))
+    
     print('Pass')
 end
 

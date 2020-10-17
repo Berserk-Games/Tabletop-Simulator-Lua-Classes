@@ -2,6 +2,25 @@ local Vector = {}
 Vector.__isVector = true
 Vector.__version = '1.0.1'
 
+function Vector.isVector(arg)
+    return type(arg) == 'table' and arg.__isVector or false
+end
+
+local function ensureIsVector(arg)
+    if Vector.isVector(arg) then
+        return arg
+    end
+    return Vector.new(arg)
+end
+
+local function typesOf(...)
+    local types = {...}
+    for k, v in ipairs(types) do
+        types[k] = type(v)
+    end
+    return types
+end
+
 function Vector.new(...)
     local vec = setmetatable({
         x = 0,
@@ -19,6 +38,8 @@ function Vector.new(...)
         vec.x = src.x or src[1] or vec.x
         vec.y = src.y or src[2] or vec.y
         vec.z = src.z or src[3] or vec.z
+    elseif argNum > 0 then
+        error(('Vector.new: (num, num, num) or (table) expected, got (%s)'):format(table.concat(typesOf(...), ', ')))
     end
     
     return vec
@@ -58,6 +79,7 @@ function Vector:copy()
 end
 
 function Vector:add(other)
+    other = ensureIsVector(other)
     self.x = self.x + other.x
     self.y = self.y + other.y
     self.z = self.z + other.z
@@ -65,10 +87,12 @@ function Vector:add(other)
 end
 
 function Vector.__add(v1, v2)
+    v1 = ensureIsVector(v1)
     return v1:copy():add(v2)
 end
 
 function Vector:sub(other)
+    other = ensureIsVector(other)
     self.x = self.x - other.x
     self.y = self.y - other.y
     self.z = self.z - other.z
@@ -76,10 +100,12 @@ function Vector:sub(other)
 end
 
 function Vector.__sub(v1, v2)
+    v1 = ensureIsVector(v1)
     return v1:copy():sub(v2)
 end
 
 function Vector:dot(other)
+    other = ensureIsVector(other)
     return self.x * other.x
         + self.y * other.y
         + self.z * other.z
@@ -104,6 +130,7 @@ function Vector:scale(...)
             sx, sy, sz = arg, arg, arg
         else
             -- vec:scale(vector)
+            arg = ensureIsVector(arg)
             sx, sy, sz = arg:get()
         end
     elseif argNum == 3 then
@@ -124,10 +151,12 @@ function Vector.__mul(val1, val2)
     if type(val1) == 'number' then
         val1, val2 = val2, val1
     end
+    val1 = ensureIsVector(val1)
     return val1:copy():scale(val2)
 end
 
 function Vector:sqrDistance(other)
+    other = ensureIsVector(other)
     local dx = self.x - other.x
     local dy = self.y - other.y
     local dz = self.z - other.z
@@ -135,10 +164,12 @@ function Vector:sqrDistance(other)
 end
 
 function Vector:distance(other)
+    other = ensureIsVector(other)
     return math.sqrt(self:sqrDistance(other))
 end
 
 function Vector:equals(other, margin)
+    other = ensureIsVector(other)
     margin = margin or 1e-3
     return self:sqrDistance(other) <= margin
 end
@@ -161,6 +192,7 @@ function Vector:__tostring()
 end
 
 function Vector:angle(other)
+    other = ensureIsVector(other)
     local cosAng = self:dot(other) / (self:magnitude() * other:magnitude())
     return math.deg(math.acos(cosAng))
 end
@@ -175,6 +207,7 @@ function Vector:clamp(maxLen)
 end
 
 function Vector:cross(other)
+    other = ensureIsVector(other)
     return Vector(
         self.y * other.z - self.z * other.y,
         self.z * other.x - self.x * other.z,
@@ -183,14 +216,17 @@ function Vector:cross(other)
 end
 
 function Vector.between(from, to)
+    to = ensureIsVector(to)
     return to - from
 end
 
 function Vector:lerp(target, t)
+    target = ensureIsVector(target)
     return self:between(target):scale(t):add(self)
 end
 
 function Vector:moveTowards(target, maxDist)
+    target = ensureIsVector(target)
     local delta = self:between(target):clamp(maxDist)
     return self:add(delta)
 end
@@ -209,6 +245,7 @@ function Vector:normalized()
 end
 
 function Vector:project(other)
+    other = ensureIsVector(other)
     if other:sqrMagnitude() ~= 1 then
         other = other:normalized()
     end
@@ -398,8 +435,24 @@ do
         end
     end    
     
-    function Vector:rotateOver(axis, angle)
+    function Vector:rotateOverAxis(axis, angle)
         return mApply(basicRotationMatrix(axis, angle), self)
+    end
+    
+    function Vector:rotateOverVector(vec)
+        vec = ensureIsVector(vec)
+        return self
+            :rotateOverAxis('z', vec.z)
+            :rotateOverAxis('x', vec.x)
+            :rotateOverAxis('y', vec.y)
+    end
+    
+    function Vector:rotateOver(axisOrVector, angle)
+        if type(axisOrVector) == 'string' then
+            return self:rotateOverAxis(axisOrVector, angle)
+        else
+            return self:rotateOverVector(axisOrVector)
+        end
     end
 end
 
@@ -421,6 +474,10 @@ end
 
 function Vector:inverse()
     return self:set(-1*self.x, -1*self.y, -1*self.z)
+end
+
+function Vector:reciprocal()
+    return self:set(1/self.x, 1/self.y, 1/self.z)
 end
 
 function Vector:projectOnPlane(planeNormal)
