@@ -11,6 +11,8 @@ local function clampMultiple(a, b, c, d)
     return clamp(a), clamp(b), clamp(c), clamp(d)
 end
 
+local playerColors
+
 function Color.new(...)
     local col = setmetatable({
         r = 0,
@@ -20,13 +22,20 @@ function Color.new(...)
     }, Color)
 
     local argNum = select('#', ...)
-    if argNum == 1 and type(...) == 'table' then
-        -- Color.new(colorTable)
-        local arg = ...
-        col.r = clamp(arg.r or col.r)
-        col.g = clamp(arg.g or col.g)
-        col.b = clamp(arg.b or col.b)
-        col.a = clamp(arg.a or col.a)
+    if argNum == 1 then
+        if type(...) == 'table' then
+            -- Color.new(colorTable)
+            local arg = ...
+            col.r = clamp(arg.r or col.r)
+            col.g = clamp(arg.g or col.g)
+            col.b = clamp(arg.b or col.b)
+            col.a = clamp(arg.a or col.a)
+        elseif type(...) == 'string' then
+            local name = (...):lower()
+            if playerColors[name] then
+                return playerColors[name]:copy()
+            end
+        end
     elseif argNum == 3 then
         -- Color.new(r, g, b)
         col.r, col.g, col.b = clampMultiple(...)
@@ -42,7 +51,7 @@ local function normalizeName(str)
     return str:sub(1, 1):upper() .. str:sub(2, -1):lower()
 end
 
-local playerColors = {
+playerColors = {
     ['white']  = Color.new(1, 1, 1),
     ['brown']  = Color.new(0.443, 0.231, 0.09),
     ['red']    = Color.new(0.856, 0.1, 0.094),
