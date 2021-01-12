@@ -114,6 +114,9 @@ local function test(Color, verbose)
 
     testEq(Color(0.1, 0.2, 0.3):lerp(Color(0.8, 0.8, 0.8), 0.5), Color(0.45, 0.5, 0.55))
     
+    testEq(Color.fromHex('#f7e7ce'), Color(0xf7 / 255, 0xe7 / 255, 0xce / 255))
+    testEq(Color.fromHex('#f7e7ceab'), Color(0xf7 / 255, 0xe7 / 255, 0xce / 255, 0xab / 255))
+    
     print('Pass')
 end
 
