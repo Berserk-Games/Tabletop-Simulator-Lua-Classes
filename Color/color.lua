@@ -84,16 +84,21 @@ end
 
 function Color.fromHex(hexColor)
     local rStr, gStr, bStr, aStr = hexColor:match('^#?(%x%x)(%x%x)(%x%x)(%x?%x?)$')
-    
-    assert(rStr and gStr and bStr and (aStr:len() == 0 or aStr:len() == 2), tostring(hexColor) .. ' is not a valid color hex string')
+    local aStrLen = aStr:len()    
+
+    assert(rStr and gStr and bStr and (aStrLen == 0 or aStrLen == 2), tostring(hexColor) .. ' is not a valid color hex string')
+
+    -- Moonsharp non-standard behavior: errors on tonumber('', base)
+    local a = aStrLen > 0 and tonumber(aStr, 16) or 255
 
     return Color(
         tonumber(rStr, 16)/255, 
         tonumber(gStr, 16)/255, 
         tonumber(bStr, 16)/255,
-        (tonumber(aStr, 16) or 255)/255
+        a/255
     )
 end
+
 
 function Color:get()
     return self.r, self.g, self.b, self.a
