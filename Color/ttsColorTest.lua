@@ -1,7 +1,7 @@
 -- for require'ing from Atom to be ran in TTS
 
-local test = require('tts_lua_classes/Color/colorTest')
-local Color = require('tts_lua_classes/Color/color')
+local test = require('Tabletop-Simulator-Lua-Classes/Color/colorTest')
+local Color = require('Tabletop-Simulator-Lua-Classes/Color/color')
 
 local _old = onLoad
 function onLoad()

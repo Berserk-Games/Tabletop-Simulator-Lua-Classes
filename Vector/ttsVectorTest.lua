@@ -1,7 +1,7 @@
 -- for require'ing from Atom to be ran in TTS
 
-local test = require('tts_lua_classes/Vector/vectorTest')
-local Vector = require('tts_lua_classes/Vector/vector')
+local test = require('Tabletop-Simulator-Lua-Classes/Vector/vectorTest')
+local Vector = require('Tabletop-Simulator-Lua-Classes/Vector/vector')
 
 local _old = onLoad
 function onLoad()
