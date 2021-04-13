@@ -1,0 +1,19 @@
+name: MoonSharp Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get update
+      - run: DEBIAN_FRONTEND=noninteractive sudo apt-get install -y mono-runtime unzip wget
+      - run: wget https://github.com/moonsharp-devs/moonsharp/releases/download/v1.5.0.1/moonsharp_release_1.5.0.1.zip
+      - run: \[ "$(md5sum moonsharp_release_1.5.0.1.zip | cut -d ' ' -f 1)" = "25267a6f0f25f5b16d5f4712991d6e91" \]
+      - run: unzip moonsharp_release_1.5.0.1.zip
+      - name: Color tests
+        run: mono repl/MoonSharp.exe Color/luaColorTest.lua
+      - name: Vector tests
+        run: mono repl/MoonSharp.exe Vector/luaVectorTest.lua
+
